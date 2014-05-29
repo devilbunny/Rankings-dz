@@ -6,24 +6,60 @@ import pandas as pd
 
 # Read in the lists of trials
 
-ctg_path = 'C:\Users\JAG\USnewsy\Clinicaltrials\CTgovDz_'
+ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgovDz_'
+output_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgov_pivot_' 
 
-cancers = [['colon', 'colorectal', 'rectal'], ['ovary', 'ovarian', 'endometrioid'], 
-        ['breast', 'ductal carcinoma', 'DCIS'], ['lung', 'pulmonary', 'small cell'],
-        ['lymphoma', 'leukemia', 'leukaemia'], ['brain', 'glioblastoma', 'astrocytoma', 'glioma'],
-        ['pancreas', 'pancreatic'], ['melanoma'], ['basal cell', 'squamous cell', 'actinic keratosis', 'skin'],
-        ['pediatric', 'ewing', 'neuroblastoma', 'rhabdomyosarcoma'], ['head and neck'],
-        ['prostate', 'prostatic'], ['soft tissue', 'sarcoma'], ['esophagus', 'esophagael', 'esophageal', 'barrett'],
-        ['kidney', 'renal', 'clear cell'], ['multiple myeloma', 'myeloma'], 
-        ['bladder', 'transitional', 'uroepithelial'], ['liver', 'hepatic', 'hepatocellular'], ['thyroid'],
-        ['cervical', 'cervix'], ['metastatic'], ['uterus', 'uterine', 'endometrial'],
-        ['gastric', 'pyloric', 'pylori', 'stomach'], ['unknown primary'], ['pheochromocytoma'],
-        ['mesothelioma'], ['testicular', 'testicle'], 
-        ['myeloproliferative', 'myelodysplastic', 'polycythemia', 'thrombocytosis', 'thrombocythemia', 'mds', 'myelodysplasia'],
-        ['hiv'], ['sinonasal', 'nasopharyngeal', 'nasopharyngael'], ['meningioma', 'leoptomeninges'], ['all']]
+top_cancers = [['lung', 'bronch', 'small-cell', 'small cell', 'nsclc', 'sclc', 'smoking'],
+            ['prostate', 'prostatic'],
+            ['breast', 'ductal carcinoma', 'dcis', 'mammogram', 'mammography'],
+            ['colon', 'colorectal', 'rectal', 'rectum', 'polyp'],
+            ['pancreas', 'pancreatic'],
+            ['liver', 'hepatocellular', 'intrahepatic bile', 'cholangio', 'hepatitis', 'nafld'],
+            ['ovary', 'ovarian'],
+            ['leukemia', 'cml', 'cll', 'hairy cell', 'leukaemia'],
+            ['esophagus', 'esophagael', 'esophageal', 'barrett'],
+            ['uterus', 'uterine', 'endometrial', 'endometrium', 'leiomyoma'],
+            ['bladder', 'urinary', 'transitional', 'uroepithelial'],
+            ['non-hodgkin', 'nhl', 'burkitt', 
+                'chronic lymphocytic', 'small lymphocytic',
+                'diffuse large b-cell', 'follicular lymphoma',
+                'immunoblastic large cell lymphoma',
+                'precursor b-lymphoblastic', 'mantle cell',
+                'mycosis fungoides', 'cutaneous t-cell',
+                'anaplastic large cell', 'precursor t-lymphoblastic', 'lymphoma'],
+            ['kidney', 'renal', 'clear cell'],
+            ['brain', 'glioblastoma', 'astrocytoma', 'glioma', 'cns',
+                 'meningioma', 'leoptomeninges', 'spinal cord', 'choroid'],
+            ['melanoma'],
+            ['oral', 'pharynx', 'mouth', 'tongue', 'smokeless']]
+
+
+other_cancers = [['skin', 'basal cell', 'actinic keratosis', 'actinic keratoses'],
+        ['head and neck', 'head & neck'], ['soft tissue', 'sarcoma'],
+        ['multiple myeloma', 'plasma cell', 'myeloma'], 
+        ['thyroid'],
+        ['cervical', 'cervix'], 
+        ['gastric', 'pyloric', 'pylori', 'stomach'], 
+        ['unknown primary'], 
+        ['mesothelioma'], 
+        ['testicular', 'testicle'], 
+        ['myeloproliferative', 'myelodysplastic', 'polycythemia', 
+        'thrombocytosis', 'thrombocythemia', 'mds', 'myelodysplasia', 'myelofibrosis'],
+        ['hiv', 'aids', 'human immunodeficiency virus', 'acquired immunodeficiency syndrome'], 
+        ['sinonasal', 'nasopharyngeal', 'nasopharyngael'],
+        ['pediatric', 'ewing', 'neuroblastoma', 'rhabdomyosarcoma', 'childhood'],
+        ['retinoblastoma'],
+        ['neuroendocrine', 'multiple endocrine', 'islet', 'pheochromocytoma', 'medullary thyroid'],
+        ['hpv', 'papilloma', 'wart'],
+        ['carcinoid'],
+        ['gastrointestinal stromal', 'gist'],
+        ['hodgkin disease', "hodgkin's disease"],
+        ['anus', 'anal', 'anorectum']]
+
+cancers = top_cancers + other_cancers + [['all']]
 
 for cancer in cancers:
-    path = ctg_path + cancer[0] + '_b.csv'
+    path = ctg_path + cancer[0] + '.csv'
     ctg = pd.read_csv(path, index_col = False, header = 0, squeeze = True)
     #get start years as numbers and then select on them
     Start_years = []
@@ -93,6 +129,6 @@ for cancer in cancers:
     except KeyError:
         pass
 
-    path = 'C:\Users\JAG\USnewsy\Clinicaltrials\CTgov_pivot_' + cancer[0] + '_b.csv'
+    path = output_path + cancer[0] + '.csv'
     pivot.to_csv(path, sep = ',', index = False)
 

@@ -3,56 +3,51 @@ import pandas as pd
 import os
 
 input_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\\'
-output_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgovDz'
+output_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgovDz_agg_'
 attributes = ['id_info/nct_id', 'brief_title', 'source', 'start_date', 
             'completion_date', 'phase', 'enrollment', 'overall_status']
 
-top_cancers = [['lung', 'bronch', 'small-cell', 'small cell', 'nsclc', 'sclc', 'smoking'],
+top_cancers = [['lung', 'bronch', 'small-cell', 'small cell'],
             ['prostate', 'prostatic'],
-            ['breast', 'ductal carcinoma', 'dcis', 'mammogram', 'mammography'],
-            ['colon', 'colorectal', 'rectal', 'rectum', 'polyp'],
+            ['breast', 'ductal carcinoma', 'DCIS'],
+            ['colon', 'colorectal', 'rectal', 'rectum'],
             ['pancreas', 'pancreatic'],
-            ['liver', 'hepatocellular', 'intrahepatic bile', 'cholangio', 'hepatitis', 'nafld'],
+            ['liver', 'hepatocellular', 'intrahepatic bile', 'cholangio'],
             ['ovary', 'ovarian'],
-            ['leukemia', 'cml', 'cll', 'hairy cell', 'leukaemia'],
+            ['leukemia', 'cml', 'cll', 'hairy cell'],
             ['esophagus', 'esophagael', 'esophageal', 'barrett'],
-            ['uterus', 'uterine', 'endometrial', 'endometrium', 'leiomyoma'],
+            ['uterus', 'uterine'],
             ['bladder', 'urinary', 'transitional', 'uroepithelial'],
             ['non-hodgkin', 'nhl', 'burkitt', 
                 'chronic lymphocytic', 'small lymphocytic',
-                'diffuse large b-cell', 'follicular lymphoma',
+                'diffuse large B-cell', 'follicular lymphoma',
                 'immunoblastic large cell lymphoma',
-                'precursor b-lymphoblastic', 'mantle cell',
-                'mycosis fungoides', 'cutaneous t-cell',
-                'anaplastic large cell', 'precursor t-lymphoblastic', 'lymphoma'],
+                'precursor B-lymphoblastic', 'mantle cell',
+                'mycosis fungoides', 'cutaneous T-cell',
+                'anaplastic large cell', 'precursor T-lymphoblastic', 'lymphoma'],
             ['kidney', 'renal', 'clear cell'],
             ['brain', 'glioblastoma', 'astrocytoma', 'glioma', 'cns',
                  'meningioma', 'leoptomeninges', 'spinal cord', 'choroid'],
             ['melanoma'],
-            ['oral', 'pharynx', 'mouth', 'tongue', 'smokeless']]
+            ['oral', 'pharynx', 'mouth', 'tongue']]
 
 
-other_cancers = [['skin', 'basal cell', 'actinic keratosis', 'actinic keratoses'],
-        ['head and neck', 'head & neck'], ['soft tissue', 'sarcoma'],
-        ['multiple myeloma', 'plasma cell', 'myeloma'], 
+other_cancers = [['skin', 'basal cell', 'squamous cell', 'actinic keratosis'],
+        ['head and neck'], ['soft tissue', 'sarcoma'],
+        ['multiple myeloma', 'plasma cell'], 
         ['thyroid'],
         ['cervical', 'cervix'], 
+        ['metastatic'],
         ['gastric', 'pyloric', 'pylori', 'stomach'], 
         ['unknown primary'], 
         ['mesothelioma'], 
         ['testicular', 'testicle'], 
-        ['myeloproliferative', 'myelodysplastic', 'polycythemia', 
-        'thrombocytosis', 'thrombocythemia', 'mds', 'myelodysplasia', 'myelofibrosis'],
-        ['hiv', 'aids', 'human immunodeficiency virus', 'acquired immunodeficiency syndrome'], 
+        ['myeloproliferative', 'myelodysplastic', 'polycythemia', 'thrombocytosis', 'thrombocythemia', 'mds', 'myelodysplasia'],
+        ['hiv', 'aids'], 
         ['sinonasal', 'nasopharyngeal', 'nasopharyngael'],
-        ['pediatric', 'ewing', 'neuroblastoma', 'rhabdomyosarcoma', 'childhood'],
+        ['pediatric', 'ewing', 'neuroblastoma', 'rhabdomyosarcoma'],
         ['retinoblastoma'],
-        ['neuroendocrine', 'multiple endocrine', 'islet', 'pheochromocytoma', 'medullary thyroid'],
-        ['hpv', 'papilloma', 'wart'],
-        ['carcinoid'],
-        ['gastrointestinal stromal', 'gist'],
-        ['hodgkin disease', "hodgkin's disease"],
-        ['anus', 'anal', 'anorectum']]
+        ['neuroendocrine', 'multiple endocrine', 'islet', 'pheochromocytoma', 'medullary thyroid']]
 
 cancers = top_cancers + other_cancers
 
@@ -110,10 +105,9 @@ def getdisease(path, cancers):
                 dz = dz + ', ' + cancer[0]
                 multiple = True
     if len(dz) == 0:
-        dz = 'Other / Unknown: ' + keywords
-        print keywords
+        dz = 'Other / Unknown'
     if multiple:
-        dz = 'Multiple: ' + dz
+        dz = 'Multiple'
     return dz
 
 def CTgov_append (directory, target_dir, attributes, cancers):
@@ -124,7 +118,7 @@ def CTgov_append (directory, target_dir, attributes, cancers):
     for path in xmls:
         values = parse_ctgov(directory + path, attributes)
         disease = getdisease(directory + path, cancers)
-        if disease[0:15] == 'Other / Unknown':
+        if disease == 'Other / Unknown':
             misses = misses + 1
         else:
             hits = hits + 1
@@ -140,12 +134,15 @@ def CTgov_append (directory, target_dir, attributes, cancers):
         df = pd.DataFrame(trial, index = [0])
         path = target_dir + '_all.csv'
         df.to_csv(path, sep = ',', index = False, mode = 'a', encoding = 'utf-8')
+        
+        '''
         for cancer in cancers:
             if disease.count(cancer[0]) > 0:
                 path = target_dir + '_' + cancer[0] + '.csv'
                 df.to_csv(path, sep = ',' , index = False, mode = 'a', encoding = 'utf-8')
             else:
                 pass
+        '''
     print 'Misses: ' + str(misses)
     print 'Hits: ' + str(hits)
     return
