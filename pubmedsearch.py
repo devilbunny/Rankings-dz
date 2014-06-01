@@ -13,7 +13,8 @@ TERM = '2012 [DP] Clinical Trial, Phase II[PT]'
 
 def pubmedsearch (TERM, MAX_COUNT = 10000):
     # Returns an Entrez object matching *TERM*
-    Entrez.email = 'A.N.Other@example.com'
+    Entrez.email = 'jagstein@uchicago.edu'
+    Entrez.tool = 'pm_impacts'
     h = Entrez.esearch(db='pubmed', retmax=MAX_COUNT, term=TERM)
     result = Entrez.read(h)
     ids = result['IdList']
@@ -23,7 +24,8 @@ def pubmedsearch (TERM, MAX_COUNT = 10000):
 
 def pmhits (TERM):
     # Returns the number of hits returned by searching pubmed for *TERM*
-    Entrez.email = 'A.N.Other@example.com'
+    Entrez.email = 'jagstein@uchicago.edu'
+    Entrez.tool = 'pm_impacts'
     h = Entrez.esearch(db='pubmed', retmax=1000000, term=TERM)
     result = Entrez.read(h)
     return result['Count']
