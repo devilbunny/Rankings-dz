@@ -7,8 +7,6 @@ from Bio import Entrez
 from Bio import Medline
 
  
-MAX_COUNT = 10000
-TERM = '2012 [DP] Clinical Trial, Phase II[PT]'
 
 
 def pubmedsearch (TERM, MAX_COUNT = 10000):
@@ -30,6 +28,3 @@ def pmhits (TERM):
     result = Entrez.read(h)
     return result['Count']
 
-
-#print('PMIDs: {0}'.format(', '.join(PMIDs)))
-#    print('Total number of publications containing {0}: {1}'.format(TERM, result['Count']))

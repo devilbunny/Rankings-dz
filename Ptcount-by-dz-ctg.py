@@ -5,7 +5,7 @@ import pandas as pd
 
 
 # Read in the lists of trials
-ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgovDz_all.csv'
+ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgovDz_vp_all.csv'
 ctg = pd.read_csv(ctg_path, index_col = False, header = 0, squeeze = True)
 
 #get start years as numbers and then select on them
@@ -30,7 +30,7 @@ for deet in ctg['Enrollment']:
     except ValueError:
         Enrollment.append(0)
 ctg['Enrollment'] = Enrollment
-ctg = ctg[ctg['Enrollment'] < 100000]
+ctg = ctg[ctg['Enrollment'] < 200000]
 
 
    
@@ -39,8 +39,9 @@ pivot = ctg.pivot_table('Enrollment', rows = 'Disease', cols = ['Phase', 'Status
 pivot['Disease'] = pivot.index
 pivot = pivot.fillna(0)
 
-path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTpt_by_dz_phase.csv'
-pivot.to_csv(path, sep = ',')
+#path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTpt_by_dz_phase.csv'
+#pivot.to_csv(path, sep = ',')
+
 
 pivot = ctg.pivot_table('Enrollment', rows = 'Disease', cols = 'Phase', aggfunc = 'sum')
 pivot['Disease'] = pivot.index

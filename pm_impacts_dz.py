@@ -1,3 +1,10 @@
+''' Deprecated - use pm_counts - even for impact factors '''
+
+
+
+
+
+
 # Runs through a list of cancers and determines the number and impact factor
 # of their publications
 # Impact factors from: http://www.citefactor.org/impact-factor-list-2012.html
@@ -10,7 +17,7 @@ cancer_path = 'C:\Users\JAG\USN-dz\cancers_cases_keys.csv'
 cancers = pd.read_csv(cancer_path, index_col=False, header=0)
 
 # Get the rank list with list of organizations and synonyms
-RL_path = 'C:\Users\JAG\USnewsy\RL_USN.csv'
+RL_path = 'C:\Users\JAG\USN-dz\RL_USN.csv'
 RL = pd.read_csv(RL_path, index_col=False, header=0)
 
 # Read in the impact-factor list
@@ -20,12 +27,15 @@ journals = IF['Pubmed Journal Title']
 factors = IF['Impact Factor']
 IFdict = dict(zip(journals,factors))
 
+print 'a'
 
 # Which article types to consider
 types = ['Clinical Trial', 'Clinical Trial, Phase I', 'Clinical Trial, Phase II', 'Clinical Trial, Phase III',
         'Review', 'All']
 
 types = ['Clinical Trial, Phase I', 'Clinical Trial, Phase II', 'Clinical Trial, Phase III']
+
+print types
 
 # get publications for each organization
 def getfactors (cancers, articletype, org = None, orgshort = None):
@@ -51,7 +61,6 @@ def getfactors (cancers, articletype, org = None, orgshort = None):
         # string together all the synonyms to make a single string
         keywords = cancers.iloc[a][2:9]
         keys = ""
-        print keywords
         for keyword in keywords:
 
             if str(keyword) == 'nan':
@@ -85,7 +94,7 @@ def getfactors (cancers, articletype, org = None, orgshort = None):
         print cancer_count
         a = a + 1
 
-    bad_journals = sorted(list(set(bad_journals)))
+    #bad_journals = sorted(list(set(bad_journals)))
     cancers[columntitleIF] = IFs
     cancers[columntitlecount] = article_count
 
@@ -93,6 +102,7 @@ def getfactors (cancers, articletype, org = None, orgshort = None):
 
     return cancers
 b = 0
+print b
 while b < len(RL.Search_Term):
     org = RL.iloc[b][1] + '[AD] '
     print org
@@ -100,6 +110,7 @@ while b < len(RL.Search_Term):
     print orgshort
     for PT in types:
         cancers = getfactors(cancers, PT, org = org, orgshort = orgshort)
+        cancers.to_csv('C:\Users\JAG\USN-dz\Cancers_Impacts_Orgb.csv', sep = ',' , index = False)
     b = b + 1
 
-cancers.to_csv('C:\Users\JAG\USN-dz\Cancers_Impacts_Orgs.csv', sep = ',' , index = False)
+cancers.to_csv('C:\Users\JAG\USN-dz\Cancers_Impacts_Orgb.csv', sep = ',' , index = False)
