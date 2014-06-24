@@ -7,7 +7,7 @@ from pubmedsearch import pubmedsearch, pmhits
 from urllib2 import URLError
 
 # Read in the list of cancers which includes the organizations
-cancer_path = 'C:\Users\JAG\USN-dz\cancers_cases_keys_meshb.csv'
+cancer_path = 'C:\Users\JAG\USN-dz\cancers_cases_keys_mesh.csv'
 cancers = pd.read_csv(cancer_path, index_col=False, header=0)
 
 # Get the rank list with list of organizations and synonyms
@@ -26,7 +26,7 @@ IFdict = dict(zip(journals,factors))
 types = ['Clinical Trial', 'Clinical Trial, Phase I', 'Clinical Trial, Phase II', 'Clinical Trial, Phase III',
         'Review', 'All']
 
-types = ['Clinical Trial', 'Clinical Trial, Phase II']
+types = ['Clinical Trial, Phase I']
 
 # get publications for each organization
 def getfactors (RL, articletype, cancer, short_cancer):
@@ -99,4 +99,4 @@ while a < len(cancers.kw1) :
         
     a = a + 1
 
-RL.to_csv('C:\Users\JAG\USN-dz\RL_dz_pm_impacts_meshb.csv', sep = ',' , index = False)
+RL.to_csv('C:\Users\JAG\USN-dz\RL_dz_pm_impacts_meshc.csv', sep = ',' , index = False)

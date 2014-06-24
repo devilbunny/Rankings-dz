@@ -2,10 +2,11 @@
 # collect the number of patients per trial phase and diagnosis
 
 import pandas as pd
+import numpy as np
 
 
 # Read in the lists of trials
-ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgovDz_vp_all.csv'
+ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Screening\CTgovDz_vp_all.csv'
 ctg = pd.read_csv(ctg_path, index_col = False, header = 0, squeeze = True)
 
 #get start years as numbers and then select on them
@@ -35,7 +36,7 @@ ctg = ctg[ctg['Enrollment'] < 200000]
 
    
 # make the pivot table - count the number of trials in each phase
-pivot = ctg.pivot_table('Enrollment', rows = 'Disease', cols = ['Phase', 'Status'], aggfunc = 'sum')
+pivot = ctg.pivot_table('nct_id', rows = 'Disease', cols = ['Phase', 'Status'], aggfunc = 'count')
 pivot['Disease'] = pivot.index
 pivot = pivot.fillna(0)
 
@@ -43,7 +44,7 @@ pivot = pivot.fillna(0)
 #pivot.to_csv(path, sep = ',')
 
 
-pivot = ctg.pivot_table('Enrollment', rows = 'Disease', cols = 'Phase', aggfunc = 'sum')
+pivot = ctg.pivot_table('nct_id', rows = 'Disease', cols = 'Phase', aggfunc = 'count')
 pivot['Disease'] = pivot.index
 pivot = pivot.fillna(0)
 
@@ -76,5 +77,5 @@ except KeyError:
     pass
 
 
-path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTpt_by_dz.csv'
+path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CT_trials_by_dz_screen.csv'
 pivot.to_csv(path, sep = ',')

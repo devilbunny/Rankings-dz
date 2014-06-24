@@ -7,13 +7,15 @@ import pandas as pd
 # Read in the lists of trials
 
 ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgovDz_vp_'
-output_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgov_pivot_vp_count_' 
+output_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgov_pivot_vp_' 
 
 cancer_path = 'C:\Users\JAG\USN-dz\cancers_cases_keys.csv'
 cancers = pd.read_csv(cancer_path, index_col=False, header=0)
 
 brief_cancers = [deet for deet in cancers['kw1']]
 brief_cancers.append('all')
+
+
 
 for cancer in brief_cancers:
     path = ctg_path + cancer + '.csv'
@@ -45,7 +47,7 @@ for cancer in brief_cancers:
     print ctg
     # make the pivot table - count the number of trials in each phase
     try:
-        pivot = pd.pivot_table(ctg, values = 'Enrollment', rows = 'Institution', cols = 'Phase', aggfunc = 'sum')
+        pivot = pd.pivot_table(ctg, values = 'nct_id', rows = 'Institution', cols = 'Phase', aggfunc = 'count')
         pivot['Institution'] = pivot.index
         pivot = pivot.fillna(0)
     except KeyError:

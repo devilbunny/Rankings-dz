@@ -5,7 +5,7 @@ import os
 import re
 
 input_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\\'
-output_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgovDz_vp_'
+output_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Screening\CTgovDz_vp_'
 attributes = ['id_info/nct_id', 'brief_title', 'source', 'start_date', 
             'completion_date', 'phase', 'enrollment', 'overall_status',
             'sponsors/lead_sponsor/agency']
@@ -150,6 +150,22 @@ def getdisease(path, cancers):
         hl = fix_lymphoma(keywords)
         dz.append(hl)
     
+    if keywords.count('screening') >0 :
+        newdz = []
+        for deet in dz:
+            deet = 'screening_' + deet
+            newdz.append(deet)
+        dz = newdz
+    
+    '''
+    if (keywords.count('metastatic') > 0 or keywords.count('advanced') > 0):
+        newdz = []
+        for deet in dz:
+            deet = 'advanced_' + deet
+            newdz.append(deet)
+        dz = newdz
+    '''
+            
     return dz
 
 def fixmayo(path):

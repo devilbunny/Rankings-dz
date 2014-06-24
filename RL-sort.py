@@ -85,5 +85,5 @@ for scores in scores_array:
 
 
 plt.show()
-plt.savefig(output_path +'fig1_27.png', dpi = 300, figsize = (8,6))
+plt.savefig(output_path +'fig1_25.png', dpi = 300, figsize = (8,6))
 plt.close()
