@@ -12,10 +12,12 @@ cancers = pd.read_csv(cancer_path, index_col=False, header=0)
 RL_path = 'C:\Users\JAG\USN-dz\RL_USN.csv'
 RL = pd.read_csv(RL_path, index_col=False, header=0, squeeze=True)
 
-
 # Read in the dictionary
 dict_path = 'C:\Users\JAG\USN-dz\CTgov_dict.csv'
 ctgdict = pd.read_csv(dict_path, index_col = False, header = 0, squeeze = True)
+
+# Set the output path
+out_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Revised\RL_USN_Ctg_'
 
 array = []
 
@@ -26,7 +28,7 @@ brief_cancers.append('all')
 for cancer in brief_cancers:
         
     # Read in the clinical trials
-    ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgov_pivot_vp_' + cancer + '.csv'
+    ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Revised\CTgov_pivot_vp_' + cancer + '.csv'
     ctg = pd.read_csv(ctg_path, index_col = False, header = 0)
 
     m1 = ctgdict.merge(ctg, on = 'Institution')
@@ -34,7 +36,7 @@ for cancer in brief_cancers:
     m1['Org name - Ctgov'] = m1.index
     m2 = RL.merge(m1, on = 'Org name - Ctgov', how = 'left')
     m2 = m2.fillna(0)    
-    save_path = 'C:\Users\JAG\USN-dz\RL_USN_Ctg_' + cancer + '.csv'
+    save_path = out_path + cancer + '.csv'
     m2.to_csv(save_path, sep = ',' , index = False, encoding = 'utf-8')
     
     # stripping off extra columns for generating the concatenated array
@@ -46,5 +48,5 @@ for cancer in brief_cancers:
     
 
 ctg_sum = pd.concat(array, axis = 1)
-save_path = 'C:\Users\JAG\USN-dz\RL_USN_Ctg_sum.csv'
+save_path = out_path + 'sum.csv'
 ctg_sum.to_csv(save_path, sep = ',', index = False, encoding = 'utf-8')

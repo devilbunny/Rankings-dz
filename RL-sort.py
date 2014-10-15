@@ -7,7 +7,7 @@ from scipy import stats
 import matplotlib.pyplot as plt
 
 
-ctg_path = 'C:\Users\JAG\USN-dz\RL_USN_Ctg_sum.csv'
+ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Revised\RL_USN_Ctg_sum.csv'
 ctg = pd.read_csv(ctg_path, index_col = False, header = 0)
 
 IF_path = 'C:\Users\JAG\USN-dz\RL_dz_pm_impacts_mesh.csv'
@@ -18,7 +18,7 @@ cancers = pd.read_csv(cancer_path, index_col = False, header = 0)
 brief_cancers = [deet for deet in cancers['kw1']]
 brief_cancers.append('all')
 
-output_path = 'C:\Users\JAG\USN-dz\Sorted\\'
+output_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Revised\Sorted\\'
 
 RL = pd.DataFrame({'Institution' : IF['Institution'], 'Rank' : IF['Rank-USNews'],
                     'Reputation' : IF['Reputation-USNews']})
@@ -76,7 +76,7 @@ Regressions.to_csv(reg_path, sep = ',')
 #### Plotting the scores #####
 
 fig = plt.figure()
-plt.figure(figsize=(8,6), dpi = 300)
+plt.figure(figsize=(8,6), dpi = 600)
 plt.gca().set_color_cycle(['black'])
 
 

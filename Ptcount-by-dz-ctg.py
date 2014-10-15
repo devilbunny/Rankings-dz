@@ -6,7 +6,7 @@ import numpy as np
 
 
 # Read in the lists of trials
-ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Screening\CTgovDz_vp_all.csv'
+ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Revised\CTgovDz_vp_all.csv'
 ctg = pd.read_csv(ctg_path, index_col = False, header = 0, squeeze = True)
 
 #get start years as numbers and then select on them
@@ -33,10 +33,26 @@ for deet in ctg['Enrollment']:
 ctg['Enrollment'] = Enrollment
 ctg = ctg[ctg['Enrollment'] < 200000]
 
+Phase = []
+for deet in ctg['Phase']:
+    if (deet == 'Phase 1' or deet == 'Phase 2' or deet == 'Phase 3'):
+        pass
+    elif deet == 'Phase 1/Phase 2':
+        deet = 'Phase 1'
+    elif deet == 'Phase 2/Phase 3':
+        deet = 'Phase 2'
+    else:
+        deet = 'N/A'
+    
+    Phase.append(deet)
+
+
+ctg['Phase'] = Phase
+
 
    
 # make the pivot table - count the number of trials in each phase
-pivot = ctg.pivot_table('nct_id', rows = 'Disease', cols = ['Phase', 'Status'], aggfunc = 'count')
+pivot = ctg.pivot_table('Enrollment', rows = 'Disease', cols = ['Phase', 'Status'], aggfunc = 'sum')
 pivot['Disease'] = pivot.index
 pivot = pivot.fillna(0)
 
@@ -44,38 +60,18 @@ pivot = pivot.fillna(0)
 #pivot.to_csv(path, sep = ',')
 
 
-pivot = ctg.pivot_table('nct_id', rows = 'Disease', cols = 'Phase', aggfunc = 'count')
+pivot = ctg.pivot_table('Enrollment', rows = 'Disease', cols = 'Phase', aggfunc = 'median')
 pivot['Disease'] = pivot.index
 pivot = pivot.fillna(0)
 
+ctg['All'] = 'All'
+pivot2 = ctg.pivot_table('Enrollment', rows = 'Disease', cols = 'All', aggfunc = 'median')
+pivot2['Disease'] = pivot2.index
+pivot2 = pivot2.fillna(0)
 
- 
-#clean up phases
-try:
-    pivot['N/A'] = pivot['N/A'] + pivot['Phase 4']
-    pivot = pivot.drop('Phase 4', axis = 1)
-except KeyError:
-    pass
-try:
-    pivot['N/A'] = pivot['N/A'] + pivot['Phase 0']
-    pivot = pivot.drop('Phase 0', axis = 1)
-except KeyError:
-    pass
-try:
-    pivot['Phase 1'] = pivot['Phase 1'] + pivot['Phase 1/Phase 2']
-    pivot = pivot.drop('Phase 1/Phase 2', axis = 1)
-except KeyError:
-    pass
-try:
-    pivot['Phase 2'] = pivot['Phase 2/Phase 3'] + pivot['Phase 2']
-    pivot = pivot.drop('Phase 2/Phase 3', axis = 1)
-except KeyError:
-    pass
-try:
-    pivot['All'] = pivot['N/A'] + pivot['Phase 1'] + pivot['Phase 2'] + pivot['Phase 3']
-except KeyError:
-    pass
+pivot = pivot.merge(pivot2)
 
 
-path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CT_trials_by_dz_screen.csv'
+
+path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Revised\CT_median_pt_by_dz.csv'
 pivot.to_csv(path, sep = ',')

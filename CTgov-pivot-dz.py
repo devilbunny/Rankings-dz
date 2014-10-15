@@ -6,8 +6,8 @@ import pandas as pd
 
 # Read in the lists of trials
 
-ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgovDz_vp_'
-output_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\CTgov_pivot_vp_' 
+ctg_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Revised\CTgovDz_vp_'
+output_path = 'C:\Users\JAG\USN-dz\Clinicaltrials\Revised\CTgov_pivot_vp_' 
 
 cancer_path = 'C:\Users\JAG\USN-dz\cancers_cases_keys.csv'
 cancers = pd.read_csv(cancer_path, index_col=False, header=0)
